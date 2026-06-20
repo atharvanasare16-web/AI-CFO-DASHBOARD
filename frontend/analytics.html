@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI CFO - Analytics</title>
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <h2>🤖 AI CFO</h2>
+            </div>
+           <nav>
+
+                <a href="index.html" class="nav-item">
+                    <i class="fas fa-tachometer-alt"></i>
+                    Dashboard
+                </a>
+
+                <a href="analytics.html" class="nav-item">
+                    <i class="fas fa-chart-bar"></i>
+                    Analytics
+                </a>
+
+                <a href="transactions.html" class="nav-item">
+                    <i class="fas fa-exchange-alt"></i>
+                    Transactions
+                </a>
+
+                <a href="customers.html" class="nav-item">
+                    <i class="fas fa-users"></i>
+                    Customers
+                </a>
+
+                <a href="vendors.html" class="nav-item">
+                    <i class="fas fa-building"></i>
+                    Vendors
+                </a>
+
+                <a href="invoices.html" class="nav-item">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                    Invoices
+                </a>
+
+                <a href="bills.html" class="nav-item">
+                    <i class="fas fa-receipt"></i>
+                    Bills
+                </a>
+
+                <a href="gst.html" class="nav-item">
+                    <i class="fas fa-percent"></i>
+                    GST Center
+                </a>
+
+                <a href="compliance.html" class="nav-item">
+                    <i class="fas fa-shield-alt"></i>
+                    Compliance
+                </a>
+
+                <a href="reports.html" class="nav-item">
+                    <i class="fas fa-chart-pie"></i>
+                    Reports
+                </a>
+
+                <a href="assistant.html" class="nav-item">
+                    <i class="fas fa-robot"></i>
+                    AI Assistant
+                </a>
+
+            </nav>
+            <div class="user-info">
+                <div class="avatar">🚀</div>
+                <div>
+                    <p id="teamName"></p>
+                    <!-- <small id="teamRole"></small> -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Top Nav -->
+            <header>
+                <div>
+
+                    <h2>
+                        Analytics
+                    </h2>
+
+                    <small>
+                        Revenue Trends & Financial Insights
+                    </small>
+
+                </div>
+
+                <div class="header-right">
+
+                    <div id="weatherWidget" class="weather-widget">
+                        🌤️ Loading Weather...
+                    </div>
+
+                    <button onclick="openTransactionModal()" class="btn-refresh">
+                        + Add Transaction
+                    </button>
+
+                    <button id="refreshBtn" onclick="refreshDashboard()" class="btn-refresh">
+                        🔄 Refresh
+                    </button>
+                    <button id="themeToggle" class="btn-refresh">
+
+                        🌙
+
+                    </button>
+
+                </div>
+
+            </header>
+
+            <div class="quick-stats">
+
+                <div class="quick-card">
+                    📈 Revenue Growth
+                    <h4 id="revenueGrowth">--</h4>
+                </div>
+
+                <div class="quick-card">
+                    💸 Avg Expense
+                    <h4 id="avgExpense">--</h4>
+                </div>
+
+                <div class="quick-card">
+                    ⚠ Risk Alerts
+                    <h4 id="alertCount">--</h4>
+                </div>
+
+            </div>
+
+            <div class="analytics-page">
+
+                <!-- Charts -->
+                <div class="charts-grid" id="analytics-section">
+                    <div class="chart-card">
+                        <h3>Revenue Trend</h3>
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <h3>Cash Flow</h3>
+                        <canvas id="cashflowChart"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <h3>
+                            Expense Breakdown
+                        </h3>
+                        <canvas id="expensePieChart"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <h3>
+                            Financial Insights
+                        </h3>
+
+                        <ul id="smartAlerts">
+                            <li>Loading...</li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="transactionModal" tabindex="-1">
+
+        <div class="modal-dialog modal-dialog-centered modal-md">
+
+            <div class="modal-content">
+
+                <div class="modal-header">
+
+                    <h5 class="modal-title">
+                        Add Transaction
+                    </h5>
+
+                    <button type="button" class="btn-close" data-bs-dismiss="modal">
+                    </button>
+
+                </div>
+
+                <div class="modal-body">
+
+                    <input type="number" id="txAmount" class="form-control mb-3" placeholder="Amount">
+
+                    <select id="txCategory" class="form-select mb-3">
+
+                        <option value="Revenue">Revenue</option>
+                        <option value="Operations">Operations</option>
+                        <option value="Investment">Investment</option>
+                        <option value="Marketing">Marketing</option>
+                        <option value="Sales">Sales</option>
+                        <option value="HR">HR</option>
+                        <option value="Technology">Technology</option>
+                        <option value="Finance">Finance</option>
+
+                    </select>
+
+                    <input type="text" id="txDescription" class="form-control mb-3" placeholder="Description">
+
+                    <select id="txType" class="form-select mb-3" onchange="toggleTransactionParty()">
+
+                        <option value="income">
+                            Income
+                        </option>
+
+                        <option value="expense">
+                            Expense
+                        </option>
+
+                    </select>
+
+                    <!-- Customer Dropdown -->
+
+                    <div id="customerWrapper" class="mb-3">
+
+                        <select id="customerId" class="form-select">
+
+                            <option value="">
+                                Select Customer
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <!-- Vendor Dropdown -->
+
+                    <div id="vendorWrapper" class="mb-3 d-none">
+
+                        <select id="vendorId" class="form-select">
+
+                            <option value="">
+                                Select Vendor
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="text-center my-4">
+
+                        <hr>
+
+                        <span class="px-3 bg-white text-muted" style="
+                position: relative;
+                top: -22px;
+            ">
+
+                            OR
+
+                        </span>
+
+                    </div>
+
+                    <div class="text-center">
+
+                        <h6 class="fw-bold mb-3">
+                            Import Transactions
+                        </h6>
+
+                        <input type="file" id="csvFile" class="form-control mb-3" accept=".csv">
+
+                        <div class="d-flex justify-content-center gap-2">
+
+                            <button type="button" class="btn btn-outline-primary" onclick="downloadCSVTemplate()">
+
+                                Download Template
+
+                            </button>
+
+                            <button type="button" id="uploadCsvBtn" class="btn btn-success" onclick="uploadCSV()">
+
+                                Upload CSV
+
+                            </button>
+
+                        </div>
+
+                        <small class="text-muted d-block mt-3">
+
+                            CSV Format:
+
+                            amount,category,description,type,customer_id,vendor_id
+
+                        </small>
+
+                        <small class="text-muted d-block">
+
+                            Income → customer_id required
+
+                        </small>
+
+                        <small class="text-muted d-block">
+
+                            Expense → vendor_id required
+
+                        </small>
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+
+                    <button type="button" class="btn btn-primary" id="saveTransactionBtn" onclick="saveTransaction()">
+
+                        Save Transaction
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <button class="ai-float-btn" data-bs-toggle="modal" data-bs-target="#aiAssistantModal">
+        <i class="fas fa-robot"></i>
+    </button>
+
+    <div class="modal fade" id="aiAssistantModal" tabindex="-1">
+
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+
+            <div class="modal-content">
+
+                <div class="modal-header">
+
+                    <h5 class="modal-title mb-0">
+                        🤖 AI CFO Assistant
+                    </h5>
+
+                    <button type="button" class="btn-close custom-close-btn" data-bs-dismiss="modal">
+                    </button>
+
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="d-flex justify-content-end mb-2">
+
+                        <button class="btn btn-sm btn-outline-danger" onclick="clearChat()">
+
+                            <i class="fas fa-trash"></i>
+                            Clear Chat
+
+                        </button>
+
+                    </div>
+
+                    <div id="chat-messages" class="chat-messages">
+                    </div>
+
+                    <div class="chat-input mt-3">
+
+                        <input type="text" id="chat-input" class="form-control" placeholder="Ask about finances...">
+
+                        <button class="btn btn-secondary" id="voiceBtn" onclick="startVoiceInput()">
+
+                            🎤 Speak
+
+                        </button>
+
+                        <button class="btn btn-primary" onclick="sendMessage()">
+
+                            Send
+
+                        </button>
+
+                    </div>
+
+                    <div class="mt-3 d-flex gap-2 flex-wrap">
+
+                        <button class="btn btn-outline-primary btn-sm"
+                            onclick="askQuickQuestion('How is my cash flow?')">
+
+                            💰 Cash Flow
+
+                        </button>
+
+                        <button class="btn btn-outline-warning btn-sm" onclick="askQuickQuestion('Any fraud risks?')">
+
+                            ⚠ Fraud Risk
+
+                        </button>
+
+                        <button class="btn btn-outline-success btn-sm"
+                            onclick="askQuickQuestion('Give profit improvement suggestions')">
+
+                            📈 Profit Tips
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+    <div id="toast"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
